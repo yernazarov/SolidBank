@@ -26,6 +26,16 @@ public class Config {
     }
 
     @Bean
+    public AccountWithdrawService accountWithdrawService() {
+        return new AccountWithdrawServiceImpl(accountDAO());
+    }
+
+    @Bean
+    public AccountDepositService accountDepositService() {
+        return new AccountDepositServiceImpl(accountDAO());
+    }
+
+    @Bean
     public BankCore bankCore() {
         return new BankCore(accountCreation());
     }
@@ -33,6 +43,30 @@ public class Config {
     @Bean
     public AccountBasicCLI accountBasicCLI() {
         return new AccountBasicCLI(myCLI(), bankCore(), accountListing());
+    }
+
+    private TransactionDAO transactionDAO() {
+        return new MemoryTransactionDAO();
+    }
+
+    @Bean
+    public TransactionWithdraw transactionWithdraw() {
+        return new TransactionWithdraw(accountWithdrawService(), transactionDAO());
+    }
+
+    @Bean
+    public TransactionWithdrawCLI transactionWithdrawCLI() {
+        return new TransactionWithdrawCLI(transactionWithdraw(), myCLI(), accountListing());
+    }
+
+    @Bean
+    public TransactionDeposit transactionDeposit() {
+        return new TransactionDeposit(accountDepositService(), transactionDAO());
+    }
+
+    @Bean
+    public TransactionDepositCLI transactionDepositCLI() {
+        return new TransactionDepositCLI(transactionDeposit(), myCLI(), accountListing());
     }
 
 }

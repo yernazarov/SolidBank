@@ -6,11 +6,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MemoryAccountDAO implements AccountDAO{
-    private List<Account> accountList = new ArrayList();
+    private List<Account> accountList = new ArrayList<>();
 
     @Override
     public List<Account> getClientAccounts(String clientID) {
-        return this.accountList.stream().filter(x -> x.getClientID() == clientID).collect(Collectors.toList());
+        return this.accountList.stream()
+                .filter(x -> x.getClientID().equals(clientID))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -21,7 +23,7 @@ public class MemoryAccountDAO implements AccountDAO{
     @Override
     public void updateAccount(Account account) {
         Account accountToBeUpdated = accountList.stream()
-                .filter(x -> Objects.equals(account.getId(), x.getId()))
+                .filter(x -> account.getId().equals(x.getId()))
                 .findAny()
                 .orElse(null);
         System.out.println("This feature is not represented properly in the UML diagram");
@@ -29,19 +31,18 @@ public class MemoryAccountDAO implements AccountDAO{
 
     @Override
     public List<Account> getClientAccountsByType(String clientID, String accountType) {
-        List<Account> accountsByType = this.accountList.stream()
-                .filter(x -> Objects.equals(x.getAccountType(), accountType))
-                .filter(x -> Objects.equals(x.getClientID(), clientID))
+        return this.accountList.stream()
+                .filter(x -> x.getAccountType() == accountType)
+                .filter(x -> x.getClientID().equals(clientID))
                 .collect(Collectors.toList());
-        return accountsByType;
     }
 
     @Override
     public AccountWithdraw getClientWithdrawAccount(String clientID, String accountID) {
         return (AccountWithdraw) accountList.stream()
-                .filter(x -> Objects.equals(x.getClientID(), clientID))
-                .filter(x -> Objects.equals(x.getId(), accountID))
-                .filter(x -> Objects.equals(x.getAccountType(), "CHECKING") || Objects.equals(x.getAccountType(), "SAVING"))
+                .filter(x -> x.getClientID().equals(clientID))
+                .filter(x -> x.getId().equals(accountID))
+                .filter(x -> x.isWithdrawAllowed())
                 .findAny()
                 .orElse(null);
     }
@@ -49,8 +50,8 @@ public class MemoryAccountDAO implements AccountDAO{
     @Override
     public Account getClientAccount(String clientID, String accountID) {
         return accountList.stream()
-                .filter(x -> Objects.equals(x.getClientID(), clientID))
-                .filter(x -> Objects.equals(x.getId(), accountID))
+                .filter(x -> x.getClientID().equals(clientID))
+                .filter(x -> x.getId().equals(accountID))
                 .findAny()
                 .orElse(null);
     }

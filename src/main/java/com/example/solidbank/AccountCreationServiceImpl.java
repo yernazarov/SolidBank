@@ -1,11 +1,10 @@
 package com.example.solidbank;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class AccountCreationServiceImpl implements AccountCreationService{
     private AccountDAO accountDAO;
-
-    public AccountCreationServiceImpl(AccountDAO accountDAO) {
-        this.accountDAO = accountDAO;
-    }
 
     @Override
     public void create(String accountType, long bankID, String clientID, long accountID) {
